@@ -1,5 +1,5 @@
 import axios from "axios";
-import store from "@/store";
+// import store from "@/store";
 import baseUrl from './baseUrl'
 let router = import("@/router");
 
@@ -13,7 +13,7 @@ let source = axios.CancelToken.source();
 
 //请求添加token
 axios.interceptors.request.use(request => {
-    request.headers["demo-auth"] = store.state.loginInfo ? store.state.loginInfo.userId : ""; // 已将userId保存在store中
+    request.headers["X-Token"] = localStorage.getItem('logintoken') ? localStorage.getItem('logintoken') : ""; // 已将userId保存在store中
     return request;
 })
 
@@ -47,11 +47,12 @@ axios.interceptors.response.use(response => {
     let data = response.data;
     let isJson = (response.headers["content-type"] || "").includes("json");
     if (isJson) {
-        if (data.code === "200") {
+        if (data.code === 200) {
             return Promise.resolve({
                 data: data.data,
                 msg: data.msg,
                 code: data.code,
+                success: true,
             });
         }
         return Promise.reject(

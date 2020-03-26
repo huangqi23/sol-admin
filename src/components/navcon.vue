@@ -1,6 +1,6 @@
 /**
 * 头部菜单
-*/ 
+*/
 <template>
   <el-menu class="el-menu-demo" mode="horizontal" background-color="#334157" text-color="#fff" active-text-color="#fff">
     <el-button class="buttonimg">
@@ -16,7 +16,7 @@
   </el-menu>
 </template>
 <script>
-import { loginout } from '../api/userMG'
+// import { loginout } from '../api/userMG'
 export default {
   name: 'navcon',
   data() {

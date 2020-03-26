@@ -28,6 +28,7 @@
 <script type="text/ecmascript-6">
 // import { login } from '../api/userMG'
 import {login} from "../utils/actions.js";
+import store from '../store'
 import { setCookie, getCookie, delCookie } from '../utils/util'
 // import md5 from 'js-md5'
 export default {
@@ -107,7 +108,18 @@ export default {
                 // 缓存用户个人信息
                 localStorage.setItem('userdata', JSON.stringify(res.data))
                 this.$store.commit('login', 'true')
-                this.$router.push({ path: '/goods/Goods' })
+
+
+                  if (store.getters.roles.length === 0) {
+                      // 判断当前用户是否已拉取完user_info信息
+                      store
+                          .dispatch('GetUserInfo')
+                          .then(res => {
+
+                          })
+                  }
+
+                this.$router.push({ path: '/system/Dept' })
               }, 1000)
             } else {
               this.$message.error(res.msg)

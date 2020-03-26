@@ -7,11 +7,14 @@ import store from './store'
 import axios from 'axios';
 // 引入icon
 import './assets/icon/iconfont.css'
-
+import  has from './directive/permission/button/index.js'
 
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
+
+
+
 new Vue({
   router,
   store,
