@@ -10,7 +10,7 @@ import index from '@/views/index';
 // 用户管理
 import user from '@/views/system/user';
 // 菜单管理
-import Module from '@/views/system/Module';
+import Module from '../views/system/Module';
 // 角色管理
 import Role from '@/views/system/Role';
 // 公司管理
@@ -41,6 +41,14 @@ const routes = [
             path: '/system/Dept',
             name: '公司管理',
             component: Dept,
+            meta: {
+                requireAuth: true
+            }
+        },
+        {
+            path: '/sysmenuList',
+            name: '菜单管理',
+            component: Module,
             meta: {
                 requireAuth: true
             }

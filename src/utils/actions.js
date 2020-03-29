@@ -145,7 +145,7 @@ export function RoleRightSave(params) {
  **/
 // 公司管理-获取公司列表
 export function deptList(params) {
-    return post("/api/User/list", params);
+    return post("/sys/list", params);
 }
 // export const deptList = (params) => { return req("post", "/api/Dept/list", params) };
 // 公司管理-保存（添加编辑）

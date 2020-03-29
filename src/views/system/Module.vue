@@ -11,7 +11,7 @@
     <!-- 主体内容 -->
     <el-row>
       <!-- title -->
-      <div class="modt-box">用户管理</div>
+      <div class="modt-box">菜单管理</div>
       <el-col :span="4"> </el-col>
       <el-col :span="6">
         <div class="mod-btnbox">
