@@ -86,10 +86,10 @@ export function userFlashCache(params) {
  * 菜单管理
  **/
 // 菜单管理-获取菜单Module/list
-export function ModuleList(params) {
-    return post("/api/User/list", params);
+export function listTreePermission(params) {
+    return post("/permission/listTreePermission", params);
 }
-// export const ModuleList = () => { return req("post", "/api/Module/list") };
+
 // 菜单管理-根据菜单获取数据
 export function ModuleGet(params) {
     return post("/api/User/list", params);
@@ -101,13 +101,18 @@ export function ModuleNodes(params) {
 }
 // export const ModuleNodes = (params) => { return req("post", "/api/Module/nodes", params) };
 // 菜单管理-修改菜单
-export function ModuleSave(params) {
-    return post("/api/User/list", params);
+export function updateRow(params) {
+    return post("/permission/update", params);
 }
-// export const ModuleSave = (params) => { return req("post", "/api/Module/save", params) };
+
 // 菜单管理-删除菜单
-export function ModuleDelete(params) {
-    return post("/api/User/list", params);
+export function deleteRow(params) {
+    return post("/permission/delete", params);
+}
+
+// 菜单管理-增加菜单
+export function createRow(params) {
+    return post("/permission/add", params);
 }
 // export const ModuleDelete = (params) => { return axios.delete("/api/Module/delete?ids=" + params + "&token=" + localStorage.getItem('logintoken')).then(res => res.data) };
 

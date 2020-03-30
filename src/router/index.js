@@ -11,6 +11,7 @@ import index from '@/views/index';
 import user from '@/views/system/user';
 // 菜单管理
 import Module from '../views/system/Module';
+import sysmenuList from '../views/system/sysmenu-manage/sysmenuList'
 // 角色管理
 import Role from '@/views/system/Role';
 // 公司管理
@@ -48,7 +49,7 @@ const routes = [
         {
             path: '/sysmenuList',
             name: '菜单管理',
-            component: Module,
+            component: sysmenuList,
             meta: {
                 requireAuth: true
             }
