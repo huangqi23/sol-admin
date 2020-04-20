@@ -8,12 +8,15 @@ import index from '@/views/index';
  * 系统管理
  */
 // 用户管理
-import user from '@/views/system/user';
+// import user from '@/views/system/user';
+import user from '../views/system/user-manage/userList';
 // 菜单管理
 import Module from '../views/system/Module';
 import sysmenuList from '../views/system/sysmenu-manage/sysmenuList'
 // 角色管理
 import Role from '@/views/system/Role';
+import roleList from '../views/system/role-manage/roleList'
+import roleSetting from '../views/system/role-manage/roleSetting'
 // 公司管理
 import Dept from '@/views/system/Dept';
 // 系统环境变量
@@ -54,14 +57,30 @@ const routes = [
                 requireAuth: true
             }
         }
-        // , {
-        //     path: '/system/user',
-        //     name: '用户管理',
-        //     component: user,
-        //     meta: {
-        //         requireAuth: true
-        //     }
-        // }, {
+        , {
+                path: '/userList',
+                name: '用户管理',
+                component: user,
+                meta: {
+                    requireAuth: true
+                }
+            }
+            , {
+                path: '/roleList',
+                name: '角色管理',
+                component: roleList,
+                meta: {
+                    requireAuth: true
+                }
+            },
+            {
+                path: '/roleSetting',
+                component: roleSetting,
+                name: '权限设置',
+                meta: { requireAuth: true},
+                hidden: true
+            }
+            // , {
         //     path: '/system/Module',
         //     name: '菜单管理',
         //     component: Module,

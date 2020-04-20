@@ -75,6 +75,36 @@ axios.interceptors.response.use(response => {
 })
 
 export function post(url, data, otherConfig) {
+    // if(data.page !== undefined ){
+    //     otherConfig['page'] = data.page;
+    // }
+
+    if(data!==undefined && Object.prototype.hasOwnProperty.call(data, "page")){
+        if(otherConfig == undefined){
+            otherConfig = {};
+            otherConfig['params'] = {};
+
+        }
+        otherConfig['params']['page'] = data.page;
+        if(Object.prototype.hasOwnProperty.call(data, "limit")){
+            otherConfig['params']['size'] = data.limit;
+        }
+        //otherConfig['size'] = data.limit;
+    }
+
+    if(data!==undefined && Object.prototype.hasOwnProperty.call(data, "currentPage")){
+        if(otherConfig == undefined){
+            otherConfig = {};
+            otherConfig['params'] = {};
+
+        }
+        otherConfig['params']['page'] = data.currentPage - 1;
+        if(Object.prototype.hasOwnProperty.call(data, "pageSize")){
+            otherConfig['params']['size'] = data.pageSize;
+        }
+        //otherConfig['size'] = data.limit;
+    }
+
     return axios.post(url, data, otherConfig);
 }
 

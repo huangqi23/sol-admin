@@ -1,35 +1,48 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <el-input
-        v-model="listQuery.name"
-        :placeholder="'请输入' + tempDesc.name"
-        style="width: 200px;margin-right: 20px"
-        class="filter-item"
-        @keyup.enter.native="handleFilter"
-      />
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
-        {{ $t('table.search') }}
-      </el-button>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-refresh" @click="handleFilter">
-        刷新
-      </el-button>
-      <el-button
-        v-waves
-        v-has="'roleList:add'"
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="primary"
-        icon="el-icon-plus"
-        @click="handleCreate"
-      >
-        {{ $t('table.add') }}
-      </el-button>
-    </div>
+
+    <!-- 面包屑导航 -->
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>角色管理</el-breadcrumb-item>
+    </el-breadcrumb>
+
+    <el-row style="margin-top:20px">
+      <el-col :span="4"> </el-col>
+      <el-col :span="8">
+        <div class="mod-btnbox" style="margin-bottom: 20px;">
+          <el-input
+            size="small"
+            v-model="listQuery.name"
+            :placeholder="'请输入' + tempDesc.name"
+            style="width: 200px;margin-right: 20px"
+            class="filter-item"
+            @keyup.enter.native="handleFilter"
+          />
+          <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+            搜索
+          </el-button>
+          <el-button  size="small" class="filter-item" type="primary" icon="el-icon-refresh" @click="handleFilter">
+            刷新
+          </el-button>
+          <el-button
+            size="small"
+            v-has="'roleList:add'"
+            class="filter-item"
+            style="margin-left: 10px;"
+            type="primary"
+            icon="el-icon-plus"
+            @click="handleCreate"
+          >
+            添加
+          </el-button>
+        </div>
+      </el-col>
+    </el-row>
 
     <el-table
       :key="tableKey"
-      v-loading="listLoading"
+
       :data="list"
       border
       fit
@@ -85,30 +98,25 @@
         <!--</template>-->
       <!--</el-table-column>-->
 
-      <el-table-column v-if="checkBtnPermission(['roleList:edit','roleList:rolesetting','roleList:delete'])" :label="$t('table.actions')" align="center" width="300" class-name="small-padding fixed-width">
+      <el-table-column v-if="checkBtnPermission(['roleList:edit','roleList:rolesetting','roleList:delete'])" label="功能" align="center" width="300" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button v-has="'roleList:edit'" type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(scope.row)">
-            {{ $t('table.edit') }}
+            编辑
           </el-button>
-          <router-link :to="'/sysUserManage/roleSetting/'+scope.row.id">
+          <!--<router-link :to="'/sysUserManage/roleSetting/'+scope.row.id">-->
+          <!--<router-link :to="{path:'/roleSetting',query:{id:scope.row.id}}">-->
+          <router-link :to="{path:'roleSetting',query:{id:scope.row.id}}">
             <el-button v-has="'roleList:rolesetting'" type="primary" size="mini" style="width: 100px;margin-left: 10px;margin-right: 10px;" icon="el-icon-setting">
               权限设置
             </el-button>
           </router-link>
           <el-button v-has="'roleList:delete'" type="danger" size="mini" icon="el-icon-delete" @click="handleDelete(scope.row)">
-            {{ $t('table.delete') }}
+             删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
-
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="listQuery.page"
-      :limit.sync="listQuery.limit"
-      @pagination="getList"
-    />
+    <Pagination v-bind:child-msg="listQuery" @callFather="callFather"></Pagination>
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form
@@ -131,10 +139,10 @@
       </el-form>
       <div slot="footer" class="dialog-footer" style="text-align: center">
         <el-button @click="dialogFormVisible = false">
-          {{ $t('table.cancel') }}
+          取消
         </el-button>
         <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
-          {{ $t('table.confirm') }}
+          确定
         </el-button>
       </div>
     </el-dialog>
@@ -142,10 +150,10 @@
 </template>
 
 <script>
-import permission from '@/directive/permission/index.js' // 权限判断指令
-import { checkBtnPermission } from '@/utils/permission' // 权限判断函数
-import { fetchList, createRow, updateRow, deleteRow } from '@/api/sys-role'
-import waves from '@/directive/waves' // Waves directive
+// import permission from '@/directive/permission/index.js' // 权限判断指令
+import { checkBtnPermission } from '../../../utils/permission' // 权限判断函数
+import { roleList, createRole, updateRole, deleteRole } from '../../../utils/actions'
+// import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 // 常量title
@@ -164,7 +172,7 @@ const tempDesc = {
 export default {
   // name: 'ComplexTable',
   components: { Pagination },
-  directives: { waves, permission },
+  // directives: { waves, permission },
   filters: {},
   data() {
     return {
@@ -173,8 +181,9 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        page: 1,
-        limit: 10,
+          currentPage: 0,
+          pageSize: 10,
+          total:0,
         name: ''
       },
       showReviewer: false,
@@ -213,11 +222,17 @@ export default {
   },
   methods: {
     checkBtnPermission,
+      // 分页插件事件
+      callFather(parm) {
+          this.listQuery.currentPage = parm.currentPage
+          this.listQuery.pageSize = parm.pageSize
+          this.getList(this.listQuery)
+      },
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.list
-        this.total = response.data.total
+        roleList(this.listQuery).then(response => {
+        this.list = response.data.content
+        this.listQuery.total = response.data.totalElements
 
         // Just to simulate the time of the request
         setTimeout(() => {
@@ -226,7 +241,7 @@ export default {
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.page = 0
       this.getList()
     },
     resetTemp() {
@@ -250,7 +265,7 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          createRow(this.temp).then(() => {
+          createRole(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
             this.$notify({
@@ -275,7 +290,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
-          updateRow(tempData).then(() => {
+          updateRole(tempData).then(() => {
             this.getList()
             this.dialogFormVisible = false
             this.$notify({
@@ -300,7 +315,7 @@ export default {
       })
         .then(() => {
           var params = { 'id': row.id }
-          deleteRow(params).then(() => {
+          deleteRole(params).then(() => {
             this.$notify({
               title: '成功',
               message: '删除成功',
